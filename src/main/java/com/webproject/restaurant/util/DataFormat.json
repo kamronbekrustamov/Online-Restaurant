@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Kebab",
+    "description": "Delicious",
+    "price": 23.99,
+    "category": "BREAKFAST",
+    "rank": 5
+  },
+
+
+  {
+    "review": "The best restaurant ever"
+  }
+]
