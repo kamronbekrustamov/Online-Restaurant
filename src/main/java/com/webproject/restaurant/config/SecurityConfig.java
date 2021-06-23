@@ -1,16 +1,21 @@
 package com.webproject.restaurant.config;
 
+import com.webproject.restaurant.filter.JwtTokenGeneratorFilter;
+import com.webproject.restaurant.filter.JwtTokenValidatorFilter;
 import com.webproject.restaurant.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -25,49 +30,55 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        // Setting The Authentication to BASIC
+        // HTTP BASIC Authentication
         http.httpBasic();
 
-        // Configuring CORS
-        http.cors().configurationSource(httpServletRequest -> {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(List.of("*"));
-            configuration.setAllowedMethods(List.of("*"));
-            configuration.setAllowedHeaders(List.of("*"));
-            configuration.setAllowCredentials(true);
-            configuration.setMaxAge(3600L);
-            return configuration;
-        });
+        // Disabling Session Management
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // Adding JWT Filters
+        http.addFilterBefore(new JwtTokenValidatorFilter(userService), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class);
 
         // Disabling CSRF
         http.csrf().disable();
 
+        // Configuring CORS
+        http.cors().configurationSource(httpServletRequest -> {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+            configuration.setAllowedMethods(List.of("*"));
+            configuration.setAllowCredentials(true);
+            configuration.setAllowedHeaders(List.of("*"));
+            configuration.setExposedHeaders(List.of("Authorization"));
+            configuration.setMaxAge(3600L);
+            return configuration;
+        });
+
         // Securing http://localhost:8080/users/*
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/users/*").anonymous()
-                .mvcMatchers(HttpMethod.POST, "/users/authenticated/*").authenticated();
+                .mvcMatchers(HttpMethod.POST, "/api/v1/users/authenticate").authenticated()
+                .mvcMatchers(HttpMethod.POST, "/api/v1/users/register").anonymous();
 
         // Securing http://localhost:8080/reviews/*
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET, "/reviews/*").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/reviews/*").hasRole("USER")
-                .mvcMatchers(HttpMethod.DELETE, "/reviews/*").hasRole("ADMIN");
+                .mvcMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/v1/reviews").hasRole("USER")
+                .mvcMatchers(HttpMethod.DELETE, "/api/v1/reviews/*").hasRole("ADMIN");
 
         // Securing http://localhost:8080/foods/*
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET, "/foods/*").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/foods/*").hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.PUT, "/foods/*").hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.DELETE, "/foods/*").hasRole("ADMIN");
+                .mvcMatchers(HttpMethod.GET, "/api/v1/foods/*").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/v1/foods").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.PUT, "/api/v1/foods").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.DELETE, "/api/v1/foods/*").hasRole("ADMIN");
 
         // Securing http://localhost:8080/bookings/*
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET, "/bookings/*").authenticated()
-                .mvcMatchers(HttpMethod.POST, "/bookings/*").hasRole("USER")
-                .mvcMatchers(HttpMethod.PUT, "/bookings/*").authenticated()
-                .mvcMatchers(HttpMethod.DELETE, "/bookings/*").authenticated();
-
+                .mvcMatchers(HttpMethod.GET, "/api/v1/bookings").authenticated()
+                .mvcMatchers(HttpMethod.POST, "/api/v1/bookings").hasRole("USER")
+                .mvcMatchers(HttpMethod.PUT, "/api/v1/bookings").authenticated()
+                .mvcMatchers(HttpMethod.DELETE, "/api/v1/bookings/*").authenticated();
     }
 
     @Override
@@ -81,5 +92,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(userService);
         return provider;
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

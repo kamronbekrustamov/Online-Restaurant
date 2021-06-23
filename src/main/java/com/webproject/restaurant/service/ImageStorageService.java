@@ -42,14 +42,17 @@ public class ImageStorageService {
 
     public String updateImage(String oldImageName, MultipartFile newImage) {
         String newImageName = this.saveImage(newImage);
-        Path oldImagePath = Paths.get(imagesFolderPath + "\\" + oldImageName);
+        this.deleteImage(oldImageName);
+        return newImageName;
+    }
+
+    public void deleteImage(String imageName) {
+        Path oldImagePath = Paths.get(imagesFolderPath + "\\" + imageName);
 
         try {
             Files.delete(oldImagePath);
         } catch (IOException e) {
-            log.error("The image with name " + oldImageName + " cannot be removed");
+            throw new RuntimeException("The image with name " + imageName + " cannot be removed");
         }
-
-        return newImageName;
     }
 }

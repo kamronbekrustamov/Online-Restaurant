@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/bookings")
+@RequestMapping("/api/v1/bookings")
 @AllArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
 
-    @GetMapping("/")
+    @GetMapping
     public Iterable<Booking> getAllBookings() {
         return bookingService.getAllBookings();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Booking saveBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         return bookingService.saveBooking(bookingRequest);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Booking updateBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         return bookingService.updateBooking(bookingRequest);
     }

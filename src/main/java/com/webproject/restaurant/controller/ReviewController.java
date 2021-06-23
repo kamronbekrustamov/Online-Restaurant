@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("/api/v1/reviews")
 @AllArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("/")
+    @GetMapping
     public Iterable<Review> getReviews() {
         return reviewService.getReviews();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Review saveReview(@Valid @RequestBody ReviewRequest reviewRequest) {
         return reviewService.saveReview(reviewRequest.getReview());
     }
 
-    @DeleteMapping("/{id}/")
+    @DeleteMapping("/{id}")
     public Review deleteReview(@PathVariable Long id) {
         return reviewService.deleteReview(id);
     }

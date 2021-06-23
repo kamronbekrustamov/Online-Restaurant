@@ -1,27 +1,27 @@
 package com.webproject.restaurant.controller;
 
+import com.webproject.restaurant.dto.AuthenticationResponse;
 import com.webproject.restaurant.dto.RegistrationRequest;
 import com.webproject.restaurant.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/login/")
-    public String isAuthenticated() {
-         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString();
+    @PostMapping("/authenticate")
+    public AuthenticationResponse authenticate() {
+         return userService.authenticate();
     }
 
-    @PostMapping("/signup/")
-    public RegistrationRequest signUp(@Valid @RequestBody RegistrationRequest request) {
-        userService.signUp(request);
-        return request;
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest request) {
+        return userService.register(request);
     }
 }

@@ -47,16 +47,17 @@ public class BookingService {
         Optional<Booking> optionalBooking = bookingRepository.findById(bookingRequest.getId());
         if (optionalBooking.isPresent()) {
             Booking currentBooking = optionalBooking.get();
-            Booking updatedBooking = new Booking(
-                    bookingRequest.getId(),
-                    bookingRequest.getNumberOfPeople(),
-                    bookingRequest.getDate(),
-                    bookingRequest.getTime(),
-                    bookingRequest.getMessage(),
-                    bookingRequest.getStatus(),
-                    currentBooking.getUser()
-            );
-            return bookingRepository.save(updatedBooking);
+            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            if (currentUser.getUserRole().equals(UserRole.ROLE_ADMIN)) {
+                currentBooking.setStatus(bookingRequest.getStatus());
+            } else {
+                currentBooking.setNumberOfPeople(bookingRequest.getNumberOfPeople());
+                currentBooking.setDate(bookingRequest.getDate());
+                currentBooking.setTime(bookingRequest.getTime());
+                currentBooking.setMessage(bookingRequest.getMessage());
+            }
+            return currentBooking;
         } else {
             throw new IllegalArgumentException("Booking with id " + bookingRequest.getId() + " does not exist");
         }

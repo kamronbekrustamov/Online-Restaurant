@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/foods")
+@RequestMapping("/api/v1/foods")
 @AllArgsConstructor
 @Slf4j
 public class FoodController {
 
     private final FoodService foodService;
 
-    @GetMapping("/")
+    @GetMapping
     public Iterable<Food> getFoods() {
         return foodService.getFoods();
     }
@@ -27,12 +27,12 @@ public class FoodController {
         return foodService.getFood(id);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Food saveFood(@Valid @ModelAttribute FoodRequest foodRequest) {
         return foodService.saveFood(foodRequest);
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Food updateFood(@Valid @ModelAttribute FoodRequest foodRequest) {
         return foodService.updateFood(foodRequest);
     }

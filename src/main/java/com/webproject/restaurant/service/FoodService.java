@@ -46,8 +46,10 @@ public class FoodService {
     }
 
     public Food updateFood(FoodRequest foodRequest) {
-        if (foodRepository.existsById(foodRequest.getId())) {
-            String imageNameToStore = imageStorageService.saveImage(foodRequest.getImage());
+        Optional<Food> optionalFood = foodRepository.findById(foodRequest.getId());
+        if (optionalFood.isPresent()) {
+            String imageNameToStore =
+                    imageStorageService.updateImage(optionalFood.get().getImageUrl(), foodRequest.getImage());
             Food food = new Food(
                     foodRequest.getId(),
                     foodRequest.getName(),
@@ -66,8 +68,10 @@ public class FoodService {
     public Food deleteFood(Long id) {
         Optional<Food> optionalFood = foodRepository.findById(id);
         if (optionalFood.isPresent()) {
+            Food food = optionalFood.get();
+            imageStorageService.deleteImage(food.getImageUrl());
             foodRepository.deleteById(id);
-            return optionalFood.get();
+            return food;
         } else {
             throw new IllegalArgumentException("A Food with Id " + id + " does not exist");
         }
