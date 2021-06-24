@@ -25,9 +25,9 @@ public class BookingController {
         return bookingService.saveBooking(bookingRequest);
     }
 
-    @PutMapping
-    public Booking updateBooking(@Valid @RequestBody BookingRequest bookingRequest) {
-        return bookingService.updateBooking(bookingRequest);
+    @PutMapping("/{id}")
+    public Booking updateBooking(@Valid @RequestBody BookingRequest bookingRequest, @PathVariable Long id) {
+        return bookingService.updateBooking(bookingRequest, id);
     }
 
     @DeleteMapping("/{id}")

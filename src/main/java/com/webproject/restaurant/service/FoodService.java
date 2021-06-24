@@ -45,13 +45,13 @@ public class FoodService {
         return foodRepository.save(food);
     }
 
-    public Food updateFood(FoodRequest foodRequest) {
-        Optional<Food> optionalFood = foodRepository.findById(foodRequest.getId());
+    public Food updateFood(FoodRequest foodRequest, Long id) {
+        Optional<Food> optionalFood = foodRepository.findById(id);
         if (optionalFood.isPresent()) {
             String imageNameToStore =
                     imageStorageService.updateImage(optionalFood.get().getImageUrl(), foodRequest.getImage());
             Food food = new Food(
-                    foodRequest.getId(),
+                    id,
                     foodRequest.getName(),
                     foodRequest.getDescription(),
                     foodRequest.getPrice(),
@@ -61,7 +61,7 @@ public class FoodService {
             );
             return foodRepository.save(food);
         } else {
-            throw new IllegalArgumentException("A Food with Id " + foodRequest.getId() + " does not exist");
+            throw new IllegalArgumentException("A Food with Id " + id + " does not exist");
         }
     }
 

@@ -15,8 +15,6 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class FoodRequest {
 
-    private Long id;
-
     @NotBlank(message = "Name is required")
     private String name;
 

@@ -12,9 +12,6 @@ import java.time.LocalDate;
 @Setter
 public class BookingRequest {
 
-
-    private Long id;
-
     @NotNull(message = "Number of People is required")
     private Integer numberOfPeople;
 

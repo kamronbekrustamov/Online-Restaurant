@@ -32,9 +32,9 @@ public class FoodController {
         return foodService.saveFood(foodRequest);
     }
 
-    @PutMapping
-    public Food updateFood(@Valid @ModelAttribute FoodRequest foodRequest) {
-        return foodService.updateFood(foodRequest);
+    @PutMapping("/{id}")
+    public Food updateFood(@Valid @ModelAttribute FoodRequest foodRequest, @PathVariable Long id) {
+        return foodService.updateFood(foodRequest, id);
     }
 
     @DeleteMapping("/{id}")

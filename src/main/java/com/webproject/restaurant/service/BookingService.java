@@ -43,8 +43,8 @@ public class BookingService {
         return bookingRepository.save(newBooking);
     }
 
-    public Booking updateBooking(BookingRequest bookingRequest) {
-        Optional<Booking> optionalBooking = bookingRepository.findById(bookingRequest.getId());
+    public Booking updateBooking(BookingRequest bookingRequest, Long id) {
+        Optional<Booking> optionalBooking = bookingRepository.findById(id);
         if (optionalBooking.isPresent()) {
             Booking currentBooking = optionalBooking.get();
             User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -59,7 +59,7 @@ public class BookingService {
             }
             return currentBooking;
         } else {
-            throw new IllegalArgumentException("Booking with id " + bookingRequest.getId() + " does not exist");
+            throw new IllegalArgumentException("Booking with id " + id + " does not exist");
         }
     }
 
