@@ -70,14 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/api/v1/foods/*").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/foods").hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.PUT, "/api/v1/foods").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.PUT, "/api/v1/foods/*").hasRole("ADMIN")
                 .mvcMatchers(HttpMethod.DELETE, "/api/v1/foods/*").hasRole("ADMIN");
 
         // Securing http://localhost:8080/bookings/*
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/api/v1/bookings").authenticated()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/bookings").hasRole("USER")
-                .mvcMatchers(HttpMethod.PUT, "/api/v1/bookings").authenticated()
+                .mvcMatchers(HttpMethod.PUT, "/api/v1/bookings/*").authenticated()
                 .mvcMatchers(HttpMethod.DELETE, "/api/v1/bookings/*").authenticated();
     }
 
