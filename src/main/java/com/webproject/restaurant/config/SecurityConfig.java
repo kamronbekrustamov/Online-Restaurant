@@ -1,6 +1,5 @@
 package com.webproject.restaurant.config;
 
-import com.webproject.restaurant.filter.JwtTokenGeneratorFilter;
 import com.webproject.restaurant.filter.JwtTokenValidatorFilter;
 import com.webproject.restaurant.service.UserService;
 import lombok.AllArgsConstructor;
@@ -37,8 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Adding JWT Filters
-        http.addFilterBefore(new JwtTokenValidatorFilter(userService), BasicAuthenticationFilter.class)
-                .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new JwtTokenValidatorFilter(userService), BasicAuthenticationFilter.class);
 
         // Disabling CSRF
         http.csrf().disable();

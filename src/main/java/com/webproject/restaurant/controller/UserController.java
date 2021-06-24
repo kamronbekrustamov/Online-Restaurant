@@ -1,6 +1,6 @@
 package com.webproject.restaurant.controller;
 
-import com.webproject.restaurant.dto.AuthenticationResponse;
+import com.webproject.restaurant.dto.AuthAndRegistrationResponse;
 import com.webproject.restaurant.dto.RegistrationRequest;
 import com.webproject.restaurant.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/authenticate")
-    public AuthenticationResponse authenticate() {
+    public AuthAndRegistrationResponse authenticate() {
          return userService.authenticate();
     }
 

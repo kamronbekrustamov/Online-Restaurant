@@ -1,8 +1,7 @@
 package com.webproject.restaurant.service;
 
-import com.webproject.restaurant.dto.AuthenticationResponse;
 import com.webproject.restaurant.dto.RegistrationRequest;
-import com.webproject.restaurant.dto.RegistrationResponse;
+import com.webproject.restaurant.dto.AuthAndRegistrationResponse;
 import com.webproject.restaurant.model.User;
 import com.webproject.restaurant.model.enums.UserRole;
 import com.webproject.restaurant.repository.UserRepository;
@@ -34,9 +33,11 @@ public class UserService implements UserDetailsService {
                         () -> new UsernameNotFoundException("User with email " + email + " not found"));
     }
 
-    public AuthenticationResponse authenticate() {
+    public AuthAndRegistrationResponse authenticate() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new AuthenticationResponse(
+        String token = JwtUtils.generateToken(user);
+        return new AuthAndRegistrationResponse(
+                token,
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
@@ -65,7 +66,7 @@ public class UserService implements UserDetailsService {
         String token = JwtUtils.generateToken(user);
 
         return ResponseEntity.ok().body(
-                new RegistrationResponse(
+                new AuthAndRegistrationResponse(
                         token,
                         user.getFirstName(),
                         user.getLastName(),
