@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Optional;
 
 @Service
@@ -22,10 +24,11 @@ public class ReviewService {
 
     public Review saveReview(String review) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String time = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm").format(LocalDateTime.now());
         Review newReview = new Review(
                 null,
                 review,
-                LocalDateTime.now(),
+                time,
                 user
         );
         reviewRepository.save(newReview);

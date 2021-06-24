@@ -25,7 +25,7 @@ public class Booking {
     private Integer numberOfPeople;
 
     @Column(name = "date")
-    private LocalDate date;
+    private String date;
 
     @Column(name = "time")
     private String time;

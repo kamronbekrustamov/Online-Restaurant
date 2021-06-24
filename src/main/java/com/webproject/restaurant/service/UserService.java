@@ -17,7 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +34,14 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User with email " + email + " not found"));
+    }
+
+    public List<User> getAllUsers() {
+        return ((List<User>)userRepository.findAll())
+                .stream()
+                .filter(
+                        user -> user.getUserRole().equals(UserRole.ROLE_USER))
+                .collect(Collectors.toList());
     }
 
     public AuthAndRegistrationResponse authenticate() {
@@ -58,8 +69,7 @@ public class UserService implements UserDetailsService {
                 request.getLastName(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()),
-                UserRole.ROLE_USER,
-                LocalDateTime.now()
+                UserRole.ROLE_USER
         );
 
         userRepository.save(user);
@@ -74,5 +84,15 @@ public class UserService implements UserDetailsService {
                         user.getUserRole().name()
                 )
         );
+    }
+
+    public User deleteUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(id);
+            return optionalUser.get();
+        } else {
+            throw new IllegalArgumentException("User with id " + id + " does not exist");
+        }
     }
 }

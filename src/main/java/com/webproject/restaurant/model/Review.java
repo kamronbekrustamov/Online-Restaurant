@@ -24,7 +24,7 @@ public class Review {
     private String review;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @JsonIgnore
     @ManyToOne

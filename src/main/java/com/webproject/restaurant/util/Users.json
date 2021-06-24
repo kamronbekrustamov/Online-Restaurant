@@ -3,42 +3,42 @@
     "firstName": "ADMIN",
     "lastName": "ADMIN",
     "email": "admin@gmail.com",
-    "password": "adminpass"
+    "password": "password"
   },
   {
     "firstName": "Kamronbek",
     "lastName": "Rustamov",
     "email": "kamronbek@gmail.com",
-    "password": "kamronbekpass"
+    "password": "password"
   },
   {
     "firstName": "Jane",
     "lastName": "Doe",
     "email": "jane@gmail.com",
-    "password": "janepass"
+    "password": "password"
   },
   {
     "firstName": "Lucy",
     "lastName": "King",
     "email": "lucy@gmail.com",
-    "password": "lucypass"
+    "password": "password"
   },
   {
     "firstName": "Freda",
     "lastName": "Ford",
     "email": "freda@gmail.com",
-    "password": "fredapass"
+    "password": "password"
   },
   {
     "firstName": "Ruby",
     "lastName": "Lee",
     "email": "ruby@gmail.com",
-    "password": "rubypass"
+    "password": "password"
   },
   {
     "firstName": "Nicol",
     "lastName": "Green",
     "email": "nicol@gmail.com",
-    "password": "nicol"
+    "password": "password"
   }
 ]

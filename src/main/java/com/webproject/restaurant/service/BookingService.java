@@ -33,10 +33,10 @@ public class BookingService {
         Booking newBooking = new Booking(
                 null,
                 bookingRequest.getNumberOfPeople(),
-                bookingRequest.getDate(),
+                bookingRequest.getDate().toString(),
                 bookingRequest.getTime(),
                 bookingRequest.getMessage(),
-                BookingStatus.PROCESSING,
+                BookingStatus.Processing,
                 user
         );
 
@@ -48,16 +48,15 @@ public class BookingService {
         if (optionalBooking.isPresent()) {
             Booking currentBooking = optionalBooking.get();
             User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
             if (currentUser.getUserRole().equals(UserRole.ROLE_ADMIN)) {
                 currentBooking.setStatus(bookingRequest.getStatus());
             } else {
                 currentBooking.setNumberOfPeople(bookingRequest.getNumberOfPeople());
-                currentBooking.setDate(bookingRequest.getDate());
+                currentBooking.setDate(bookingRequest.getDate().toString());
                 currentBooking.setTime(bookingRequest.getTime());
                 currentBooking.setMessage(bookingRequest.getMessage());
             }
-            return currentBooking;
+            return bookingRepository.save(currentBooking);
         } else {
             throw new IllegalArgumentException("Booking with id " + id + " does not exist");
         }

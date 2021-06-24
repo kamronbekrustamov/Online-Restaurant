@@ -1,5 +1,6 @@
 package com.webproject.restaurant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.webproject.restaurant.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,45 +36,51 @@ public class User implements UserDetails {
     @Column(name = "email", unique = true, updatable = false)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
+    @JsonIgnore
     @Column(name = "role")
     private UserRole userRole;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(userRole.name()));
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return password;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

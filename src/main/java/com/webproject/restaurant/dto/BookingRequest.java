@@ -3,6 +3,7 @@ package com.webproject.restaurant.dto;
 import com.webproject.restaurant.model.enums.BookingStatus;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ public class BookingRequest {
     private Integer numberOfPeople;
 
     @NotNull(message = "Date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @FutureOrPresent(message = "Date cannot be at past")
     private LocalDate date;
 

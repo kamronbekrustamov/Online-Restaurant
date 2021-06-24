@@ -56,7 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Securing http://localhost:8080/users/*
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/api/v1/users/authenticate").authenticated()
-                .mvcMatchers(HttpMethod.POST, "/api/v1/users/register").anonymous();
+                .mvcMatchers(HttpMethod.POST, "/api/v1/users/register").anonymous()
+                .mvcMatchers(HttpMethod.GET, "/api/v1/users/all").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.DELETE, "/api/v1/users/*").hasRole("ADMIN");
 
         // Securing http://localhost:8080/reviews/*
         http.authorizeRequests()
